@@ -47,7 +47,7 @@ export function renderSettings() {
   if (hasLocalChanges()) {
     view.appendChild(
       noticeBox(
-        "Local changes only — GitHub sync is not implemented yet (Phase 4). Changes live in this browser's localStorage.",
+        "You have local changes in this browser. They will not appear in the GitHub data repo until you click Save to GitHub below.",
         "info"
       )
     );

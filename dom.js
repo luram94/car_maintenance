@@ -56,17 +56,18 @@ export function labelledInput(label, name, opts = {}) {
   const id = `f-${name}-${Math.random().toString(36).slice(2, 8)}`;
   const wrap = el("label", { class: opts.wrapClass || "form-field", attrs: { for: id } });
   wrap.appendChild(document.createTextNode(label));
-  const input = el(opts.tag || "input", {
+  const tag = opts.tag || "input";
+  const inputOpts = {
     id,
     name,
-    type: opts.type || "text",
     value: opts.value != null ? String(opts.value) : "",
     placeholder: opts.placeholder || "",
     attrs: opts.attrs || {},
-  });
-  if (opts.tag === "textarea") {
-    input.value = opts.value != null ? String(opts.value) : "";
-  }
+  };
+  // <textarea> has a read-only `type` getter; assigning to it throws in
+  // strict mode. Only set `type` on real <input>s.
+  if (tag !== "textarea") inputOpts.type = opts.type || "text";
+  const input = el(tag, inputOpts);
   if (opts.step != null) input.step = String(opts.step);
   if (opts.min != null) input.min = String(opts.min);
   if (opts.max != null) input.max = String(opts.max);
