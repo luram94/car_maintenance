@@ -546,10 +546,15 @@ function renderSyncStatusBlock(sectionEl) {
     );
   }
   if (state.sync.lastSyncedAt) {
+    const d = new Date(state.sync.lastSyncedAt);
+    const friendly = isNaN(d.getTime())
+      ? state.sync.lastSyncedAt
+      : d.toLocaleString();
     wrap.appendChild(
       el("p", {
         class: "muted small",
-        text: `Last synced: ${state.sync.lastSyncedAt}`,
+        text: `Last synced: ${friendly}`,
+        attrs: { title: state.sync.lastSyncedAt },
       })
     );
   }
