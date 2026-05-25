@@ -488,9 +488,16 @@ function renderGithubSection() {
 
 function renderSyncResult(r) {
   const verb = r.kind === "load" ? "Load from GitHub" : r.kind === "create" ? "Create remote files" : "Save to GitHub";
+  const when = state.sync.lastSyncedAt
+    ? new Date(state.sync.lastSyncedAt).toLocaleString()
+    : null;
   if (r.ok) {
     const box = el("section", { class: "notice notice-info" });
-    box.appendChild(el("strong", { text: `${verb} succeeded.` }));
+    box.appendChild(
+      el("strong", {
+        text: `Last sync: ${verb} — succeeded${when ? ` at ${when}` : ""}.`,
+      })
+    );
     if (r.warnings && r.warnings.length) {
       box.appendChild(el("p", { class: "small", text: "Warnings:" }));
       const ul = el("ul");

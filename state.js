@@ -300,8 +300,12 @@ export function clearStoredData() {
   notify();
 }
 
+// True when the in-memory data/plan differs from the last successfully
+// synced (or never-synced) remote. Drives the "you have local changes"
+// notice — must NOT be conflated with "localStorage has a cached copy",
+// which is true whenever the app has been used.
 export function hasLocalChanges() {
-  return state.usingStoredData || state.usingStoredPlan;
+  return state.sync.dirty === true;
 }
 
 export function newId() {
