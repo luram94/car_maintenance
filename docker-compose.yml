@@ -1,0 +1,20 @@
+# Development-only orchestration. The deployed app is still static HTML/CSS/JS;
+# none of this ships to GitHub Pages.
+#
+# Usage:
+#   docker compose up                              # serve at http://localhost:8000
+#   docker compose run --rm app npm run check      # JS + JSON syntax checks
+#   docker compose run --rm app sh                 # ad-hoc shell
+
+services:
+  app:
+    build: .
+    image: car-maintenance-dev:latest
+    container_name: car-maintenance-dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    working_dir: /app
+    # Dockerfile CMD runs http-server on 0.0.0.0:8000. `compose run` overrides
+    # this with whatever command you pass (e.g. `npm run check`).

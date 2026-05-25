@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2024-06-15T00:00:00.000Z",
+  "car": {
+    "make": "Volkswagen",
+    "model": "Polo 1.2 TSI",
+    "engine": "EA211",
+    "year": 2014,
+    "powerCv": 90,
+    "body": "5-door manual",
+    "version": "Bluemotion",
+    "licensePlate": "",
+    "vin": ""
+  },
+  "currentMileage": {
+    "km": 100000,
+    "updatedAt": "2024-06-15"
+  },
+  "interventions": [
+    {
+      "id": "demo0000-0002-4000-8000-000000000002",
+      "date": "2024-06-01",
+      "dateApproximate": true,
+      "dateText": "June 2024 (demo)",
+      "km": 100000,
+      "workshop": "Demo Workshop",
+      "totalCost": null,
+      "currency": "EUR",
+      "notes": "Demo grouped intervention. Replace with your own data in your private data repo."
+    }
+  ],
+  "maintenanceRecords": [
+    {
+      "id": "demo0000-0001-4000-8000-000000000001",
+      "interventionId": null,
+      "type": "cadena_distribucion",
+      "date": null,
+      "dateApproximate": true,
+      "dateText": "demo entry — replace me",
+      "km": 60000,
+      "brand": "",
+      "reference": "",
+      "cost": null,
+      "currency": "EUR",
+      "workshop": "",
+      "quantity": 1,
+      "notes": "Demo record. Replace with your own data in your private data repo."
+    },
+    {
+      "id": "demo0000-0003-4000-8000-000000000003",
+      "interventionId": "demo0000-0002-4000-8000-000000000002",
+      "type": "mariposa",
+      "date": "2024-06-01",
+      "dateApproximate": true,
+      "dateText": "June 2024 (demo)",
+      "km": 100000,
+      "brand": "",
+      "reference": "",
+      "cost": null,
+      "currency": "EUR",
+      "workshop": "Demo Workshop",
+      "quantity": 1,
+      "notes": ""
+    },
+    {
+      "id": "demo0000-0004-4000-8000-000000000004",
+      "interventionId": "demo0000-0002-4000-8000-000000000002",
+      "type": "bujias",
+      "date": "2024-06-01",
+      "dateApproximate": true,
+      "dateText": "June 2024 (demo)",
+      "km": 100000,
+      "brand": "",
+      "reference": "",
+      "cost": null,
+      "currency": "EUR",
+      "workshop": "Demo Workshop",
+      "quantity": 4,
+      "notes": ""
+    },
+    {
+      "id": "demo0000-0005-4000-8000-000000000005",
+      "interventionId": "demo0000-0002-4000-8000-000000000002",
+      "type": "bobinas",
+      "date": "2024-06-01",
+      "dateApproximate": true,
+      "dateText": "June 2024 (demo)",
+      "km": 100000,
+      "brand": "",
+      "reference": "",
+      "cost": null,
+      "currency": "EUR",
+      "workshop": "Demo Workshop",
+      "quantity": 2,
+      "notes": ""
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+[
+  {
+    "id": "aceite_motor",
+    "name": "Engine oil + oil filter",
+    "intervalKm": 15000,
+    "intervalMonths": 12,
+    "category": "routine"
+  },
+  {
+    "id": "filtro_aire",
+    "name": "Air filter",
+    "intervalKm": 30000,
+    "intervalMonths": 24,
+    "category": "routine"
+  },
+  {
+    "id": "filtro_habitaculo",
+    "name": "Cabin filter",
+    "intervalKm": 30000,
+    "intervalMonths": 24,
+    "category": "routine"
+  },
+  {
+    "id": "bujias",
+    "name": "Spark plugs",
+    "intervalKm": 60000,
+    "intervalMonths": null,
+    "category": "routine"
+  },
+  {
+    "id": "liquido_frenos",
+    "name": "Brake fluid",
+    "intervalKm": null,
+    "intervalMonths": 24,
+    "category": "routine"
+  },
+  {
+    "id": "liquido_refrigerante",
+    "name": "Coolant",
+    "intervalKm": 90000,
+    "intervalMonths": 48,
+    "category": "routine"
+  },
+  {
+    "id": "correa_accesorios",
+    "name": "Accessory belt",
+    "intervalKm": 90000,
+    "intervalMonths": null,
+    "category": "routine"
+  },
+  {
+    "id": "filtro_combustible",
+    "name": "Fuel filter",
+    "intervalKm": 60000,
+    "intervalMonths": null,
+    "category": "routine"
+  },
+  {
+    "id": "cadena_distribucion",
+    "name": "Timing chain",
+    "intervalKm": 200000,
+    "intervalMonths": null,
+    "category": "major",
+    "notes": "Monitor cold-start rattling"
+  },
+  {
+    "id": "pastillas_freno_del",
+    "name": "Front brake pads",
+    "intervalKm": 50000,
+    "intervalMonths": null,
+    "category": "wear"
+  },
+  {
+    "id": "bateria",
+    "name": "Battery",
+    "intervalKm": null,
+    "intervalMonths": 60,
+    "category": "wear"
+  },
+  {
+    "id": "aceite_caja",
+    "name": "Manual gearbox oil",
+    "intervalKm": 90000,
+    "intervalMonths": null,
+    "category": "routine"
+  },
+  {
+    "id": "mariposa",
+    "name": "Throttle body",
+    "intervalKm": null,
+    "intervalMonths": null,
+    "category": "repair",
+    "notes": "Repair item, not routine scheduled maintenance"
+  },
+  {
+    "id": "bobinas",
+    "name": "Ignition coils",
+    "intervalKm": null,
+    "intervalMonths": null,
+    "category": "repair"
+  }
+]

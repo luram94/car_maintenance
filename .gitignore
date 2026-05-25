@@ -1,0 +1,17 @@
+# Machine-local Claude Code permissions, never shared
+.claude/settings.local.json
+
+# Node / dev tooling (we don't ship any of this, but a defensive net)
+node_modules/
+npm-debug.log
+*.log
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local secrets — never commit
+.env
+.env.*

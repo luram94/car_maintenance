@@ -1,0 +1,15 @@
+{
+  "name": "car-maintenance-dev",
+  "private": true,
+  "version": "0.0.0-dev",
+  "description": "Dev tooling only. The deployed app is plain static HTML/CSS/JS; nothing here ships to GitHub Pages.",
+  "scripts": {
+    "check:js": "for f in app.js github-api.js state.js validation.js calculations.js dom.js views-dashboard.js views-detail.js views-history.js views-settings.js; do node --check \"$f\" || exit 1; done; echo 'JS OK'",
+    "check:json": "node -e \"['data/mantenimientos.json','data/plan-mantenimiento.json'].forEach(p=>JSON.parse(require('fs').readFileSync(p,'utf8')));console.log('JSON OK')\"",
+    "check": "npm run check:js && npm run check:json",
+    "serve": "http-server . -p 8000 -c-1 -a 0.0.0.0"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}

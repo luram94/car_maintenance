@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark light" />
+  <title>Car Maintenance</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-row">
+      <h1 class="app-title">Car Maintenance</h1>
+      <button id="theme-toggle" type="button" class="theme-btn" aria-label="Switch theme">Light theme</button>
+    </div>
+    <nav class="app-nav" aria-label="Main">
+      <a href="#/dashboard">Dashboard</a>
+      <a href="#/history">History</a>
+      <a href="#/settings">Settings</a>
+    </nav>
+  </header>
+
+  <main id="view" class="app-view" aria-live="polite">
+    <p class="boot-message">Loading…</p>
+  </main>
+
+  <footer class="app-footer">
+    <span
+      id="sync-status"
+      class="sync-status"
+      data-state="idle"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >Local only</span>
+  </footer>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
