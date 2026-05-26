@@ -20,6 +20,7 @@ This skill encodes the rules for building and maintaining this project. Read it 
 
 - **Static web app** hosted on GitHub Pages, persisting JSON in a GitHub repo via the Contents API. No backend, no database, no build step.
 - **Recommended deployment**: public repo for the app, **private** repo for the data. Single-repo setup is also supported via config, but the README must warn that public-repo data exposes VIN/plate/costs.
+- **Live deployment & local checkout** (verified 2026-05-26): the app is live on GitHub Pages at `https://luram94.github.io/car_maintenance/`. The public app repo is `github.com/luram94/car_maintenance` (deployed from `main`). Note the local working directory is named `car_maintenance_v2`, but that is **only a local folder name** — its `origin` is the same `car_maintenance` repo, not a separate "v2". Do not treat the `_v2` suffix as a different version or fork. The owner uses the live URL for real edits; `localhost:8000` (Docker) is just a dev mirror of the same code.
 - **Stack**: vanilla HTML + CSS + ES-module JavaScript. No framework. Alpine/Petite-Vue may only be proposed with strong justification, never assumed.
 - **Routing**: hash-only (`#/dashboard`, `#/maintenance/:id`, `#/history`, `#/settings`) because GitHub Pages cannot do server-side routing.
 - **Demo car (anonymized seed)**: VW Polo 1.2 TSI EA211, 90 CV, 2014, 5-door manual, Bluemotion. VIN and license plate intentionally empty in the public seed; real values belong only in the user's private data repo. The owner's actual values are NOT stored in this codebase.
