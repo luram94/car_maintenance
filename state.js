@@ -224,6 +224,29 @@ export function addRecord(record, newIntervention) {
   persistDataAndNotify();
 }
 
+export function deleteRecord(id, { deleteEmptyIntervention = false } = {}) {
+  const i = state.data.maintenanceRecords.findIndex((r) => r.id === id);
+  if (i < 0) return { ok: false, error: "Record not found." };
+  const [removed] = state.data.maintenanceRecords.splice(i, 1);
+  let removedIntervention = false;
+  if (deleteEmptyIntervention && removed.interventionId) {
+    const stillUsed = state.data.maintenanceRecords.some(
+      (r) => r.interventionId === removed.interventionId
+    );
+    if (!stillUsed) {
+      const j = state.data.interventions.findIndex(
+        (iv) => iv.id === removed.interventionId
+      );
+      if (j >= 0) {
+        state.data.interventions.splice(j, 1);
+        removedIntervention = true;
+      }
+    }
+  }
+  persistDataAndNotify();
+  return { ok: true, removedIntervention };
+}
+
 export function addPlanItem(item) {
   if (state.plan.some((p) => p.id === item.id)) {
     return { ok: false, error: `Plan item id "${item.id}" already exists.` };

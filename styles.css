@@ -470,6 +470,12 @@ body {
   margin-top: 2px;
 }
 
+.record-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
 /* ---------- responsive tweaks ---------- */
 
 @media (min-width: 600px) {

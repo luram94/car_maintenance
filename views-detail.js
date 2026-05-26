@@ -3,6 +3,7 @@
 
 import {
   addRecord,
+  deleteRecord,
   newId,
   state,
 } from "./state.js";
@@ -142,7 +143,43 @@ export function renderRecordItem(rec) {
       li.appendChild(el("div", { class: "muted record-intv", text: grouped }));
     }
   }
+
+  const actions = el("div", { class: "record-actions" });
+  const delBtn = el("button", {
+    type: "button",
+    class: "btn-small danger",
+    text: "Delete",
+  });
+  delBtn.addEventListener("click", () => handleDeleteRecord(rec));
+  actions.appendChild(delBtn);
+  li.appendChild(actions);
   return li;
+}
+
+function handleDeleteRecord(rec) {
+  if (!confirm("Delete this maintenance record? This cannot be undone.")) return;
+  let deleteEmptyIntervention = false;
+  if (rec.interventionId) {
+    const others = state.data.maintenanceRecords.filter(
+      (r) => r.interventionId === rec.interventionId && r.id !== rec.id
+    );
+    if (others.length === 0) {
+      const intv = state.data.interventions.find(
+        (i) => i.id === rec.interventionId
+      );
+      const label = intv ? intv.workshop || "intervention" : "intervention";
+      const costText =
+        intv && intv.totalCost != null
+          ? ` (total ${intv.totalCost} ${intv.currency || ""})`.trimEnd()
+          : "";
+      deleteEmptyIntervention = confirm(
+        `This was the last record in "${label}"${costText}. ` +
+          "Also delete that now-empty intervention? " +
+          "Cancel keeps it — its total cost stays in the summary."
+      );
+    }
+  }
+  deleteRecord(rec.id, { deleteEmptyIntervention });
 }
 
 function renderAddRecordForm(planItem) {
