@@ -27,18 +27,39 @@ This skill encodes the rules for building and maintaining this project. Read it 
 
 ## File map
 
+Restructured 2026-05-26: the deployable app lives under `docs/` (the GitHub
+Pages publishing source — Settings → Pages → Branch `main`, folder `/docs`).
+Everything outside `docs/` is dev tooling and never deployed.
+
 ```
-index.html                       single-page shell, view container, hash-route targets
-styles.css                       CSS variables, dark default + prefers-color-scheme light
-app.js                           state, router, calculations, rendering, forms
-github-api.js                    GitHub Contents API adapter (no domain logic)
-data/mantenimientos.json         car + currentMileage + interventions[] + maintenanceRecords[]
-data/plan-mantenimiento.json     14-item maintenance plan (routine/wear/major/repair)
-README.md                        setup, PAT creation, Pages activation, privacy warnings (Phase 5)
+docs/                              GitHub Pages publishing source (served at site root)
+  index.html                       single-page shell, view container, hash-route targets
+  favicon.svg                      car-themed SVG icon (referenced via <link rel="icon">)
+  assets/css/styles.css            CSS variables, dark default + prefers-color-scheme light
+  data/mantenimientos.json         car + currentMileage + interventions[] + maintenanceRecords[]
+  data/plan-mantenimiento.json     14-item maintenance plan (routine/wear/major/repair)
+  js/app.js                        boot, hash router, view dispatch
+  js/core/state.js                 state, localStorage persistence, mutators, sync state machine
+  js/core/validation.js            validateData / validatePlan / crossValidate; strict ISO date
+  js/core/calculations.js          pure calc engine (next due, urgency, sort, cost summary)
+  js/ui/dom.js                     safe DOM helpers (el / row / labelledInput / etc.)
+  js/ui/views-dashboard.js         dashboard view
+  js/ui/views-detail.js            detail view + Register-new-record form + Edit/Delete record
+  js/ui/views-history.js           history view, filters, cost summary
+  js/ui/views-settings.js          settings, plan editor, GitHub sync, import/export, reset
+  js/api/github-api.js             GitHub Contents API adapter (no domain logic)
+docker/Dockerfile                  dev only — Node + http-server (serves docs/)
+docker-compose.yml                 dev only — serves docs/ at :8000
+scripts/check.mjs                  dev only — JS syntax + JSON parse gate (auto-discovers files)
+package.json                       dev only — check + serve scripts
+README.md                          setup, PAT creation, Pages activation, privacy warnings
 .claude/skills/car-maintenance-app/SKILL.md   this file
 ```
 
-Only add helper files (e.g. `calc.js`, `views.js`) if `app.js` grows past ~800 lines, and only after proposing the split and getting approval.
+Imports are relative within `docs/js/`: `ui/*` reach core via `../core/…` and
+the API adapter via `../api/…`; same-folder imports stay `./…`. Only add helper
+files if a module grows unwieldy, and only after proposing the split and getting
+approval.
 
 ## Data model essentials
 
