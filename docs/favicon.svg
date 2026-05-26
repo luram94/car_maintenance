@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" role="img" aria-label="Car maintenance">
+  <rect width="32" height="32" rx="7" fill="#0ea5e9"/>
+  <path d="M9 15l2.5-4.6a2 2 0 0 1 1.8-1.1h5.4a2 2 0 0 1 1.8 1.1L23 15z" fill="#e0f2fe"/>
+  <rect x="6" y="15" width="20" height="6" rx="2" fill="#f8fafc"/>
+  <circle cx="11" cy="22" r="2.7" fill="#0f172a"/>
+  <circle cx="21" cy="22" r="2.7" fill="#0f172a"/>
+  <circle cx="11" cy="22" r="1" fill="#e2e8f0"/>
+  <circle cx="21" cy="22" r="1" fill="#e2e8f0"/>
+</svg>
