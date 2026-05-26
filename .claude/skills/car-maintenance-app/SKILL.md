@@ -1,6 +1,6 @@
 ---
 name: car-maintenance-app
-description: Use when working on the Volkswagen Polo car-maintenance static web app in this repo — building, editing, or extending the GitHub-Pages-hosted, GitHub-API-persisted maintenance tracker. Triggers on changes to index.html, app.js, github-api.js, styles.css, or data/*.json; on questions about the maintenance plan, urgency calculations, sync state, GitHub PAT handling; or on phase-by-phase build work. Encodes the owner's workflow rules, locked decisions, data model, and safety constraints so future sessions stay consistent.
+description: Use when working on the Volkswagen Polo car-maintenance static web app in this repo — building, editing, or extending the GitHub-Pages-hosted, GitHub-API-persisted maintenance tracker. Triggers on changes under docs/ (docs/index.html, docs/js/** including app.js, core/*, ui/*, api/github-api.js, docs/assets/css/styles.css, docs/data/*.json) or to docker/, scripts/check.mjs; on questions about the maintenance plan, urgency calculations, sync state, GitHub PAT handling; or on phase-by-phase build work. Encodes the owner's workflow rules, locked decisions, data model, and safety constraints so future sessions stay consistent.
 ---
 
 # Car maintenance app — working agreement
@@ -211,20 +211,20 @@ Token is in `config.token`, used **only** in the `Authorization: Bearer …` hea
 Native ES modules, no bundler. `app.js` is the boot/router orchestrator only.
 
 ```
-app.js               boot, hash router, view dispatch, sync-status text
-state.js             state object, localStorage persistence, mutators, change hook
-validation.js        validateData / validatePlan / crossValidate; strict ISO date check
-calculations.js      pure calc engine (find-latest, km/month estimate, urgency, sort, cost summary)
-dom.js               el / row / labelledInput / labelledSelect / checkbox / errorBox / noticeBox / pickFile / readFileAsText / downloadJson
-views-dashboard.js   car summary + urgency-sorted cards
-views-detail.js      plan-item meta + status box + history list + Register-new-record form
-views-history.js     chronological list with type/year/category/workshop/search filters + cost summary
-views-settings.js    car form, mileage form, theme toggle, plan editor, GitHub placeholder, import/export, reset
-github-api.js        still a stub until Phase 4
+docs/js/app.js                 boot, hash router, view dispatch, sync-status text
+docs/js/core/state.js          state object, localStorage persistence, mutators, change hook
+docs/js/core/validation.js     validateData / validatePlan / crossValidate; strict ISO date check
+docs/js/core/calculations.js   pure calc engine (find-latest, km/month estimate, urgency, sort, cost summary)
+docs/js/ui/dom.js              el / row / labelledInput / labelledSelect / checkbox / errorBox / noticeBox / pickFile / readFileAsText / downloadJson
+docs/js/ui/views-dashboard.js  car summary + urgency-sorted cards
+docs/js/ui/views-detail.js     plan-item meta + status box + history list + Register/Edit/Delete record
+docs/js/ui/views-history.js    chronological list with type/year/category/workshop/search filters + cost summary
+docs/js/ui/views-settings.js   car form, mileage form, theme toggle, plan editor, GitHub sync, import/export, reset
+docs/js/api/github-api.js      GitHub Contents API adapter — fully implemented (Phase 4)
 ```
 
 Cross-module rules:
-- Views import only from `state`, `dom`, `calculations`, and other view modules.
+- View modules (`ui/*`) import from `core/state`, `core/calculations`, `core/validation`, `ui/dom`, and sibling views — via relative paths (`../core/…`, `./…`). `state.js` reaches the adapter via `../api/github-api.js`.
 - Mutators in `state.js` call a `_onChange` hook registered by `app.js`. This avoids circular imports for re-render.
 - No module imports from `app.js`.
 
@@ -241,10 +241,10 @@ No PAT is stored yet. The token input in Settings is disabled and labelled "Phas
 
 ## Dev tooling (added in Phase 2)
 
-- `Dockerfile` + `package.json` + `.dockerignore` exist for local development **only**. They never ship to GitHub Pages. The deployed app is plain static files — no Node, no build step.
-- `npm run check` runs `node --check` on both JS files and JSON.parse on both data files.
-- `npm run serve` runs `http-server` on port 8000. Same effect as `python3 -m http.server`.
-- Container usage: `docker build -t car-maintenance-dev .` then `docker run --rm -p 8000:8000 -v "$PWD":/app car-maintenance-dev` (CMD already runs the server).
+- `docker/Dockerfile` + `package.json` + `.dockerignore` exist for local development **only**. They never ship to GitHub Pages. The deployed app is plain static files — no Node, no build step.
+- `npm run check` runs `scripts/check.mjs`, which `node --check`s every JS file under `docs/js/` and `JSON.parse`s every JSON under `docs/data/` (auto-discovered — no hardcoded file list to keep in sync).
+- `npm run serve` runs `http-server docs` on port 8000 — serves the `docs/` folder (the Pages root). Same effect as `python3 -m http.server 8000 --directory docs`.
+- Container usage: `docker compose up` (recommended), or `docker build -f docker/Dockerfile -t car-maintenance-dev .` then `docker run --rm -p 8000:8000 -v "$PWD":/app car-maintenance-dev` (CMD serves `docs/`).
 - `http-server` is installed **globally** inside the image so bind-mounting `/app` does not hide it. Do not switch to a local-only install without solving that.
 
 When the user says "continue" or "next phase", confirm which phase you are starting and what files you will touch before editing.
