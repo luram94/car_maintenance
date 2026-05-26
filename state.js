@@ -247,6 +247,14 @@ export function deleteRecord(id, { deleteEmptyIntervention = false } = {}) {
   return { ok: true, removedIntervention };
 }
 
+export function updateRecord(id, patch) {
+  const rec = state.data.maintenanceRecords.find((r) => r.id === id);
+  if (!rec) return { ok: false, error: "Record not found." };
+  Object.assign(rec, patch);
+  persistDataAndNotify();
+  return { ok: true };
+}
+
 export function addPlanItem(item) {
   if (state.plan.some((p) => p.id === item.id)) {
     return { ok: false, error: `Plan item id "${item.id}" already exists.` };

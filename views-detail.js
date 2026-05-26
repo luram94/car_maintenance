@@ -6,6 +6,7 @@ import {
   deleteRecord,
   newId,
   state,
+  updateRecord,
 } from "./state.js";
 import {
   computePlanRows,
@@ -24,6 +25,8 @@ import {
   renderProgress,
   rowOrPlaceholder,
 } from "./views-dashboard.js";
+
+let editingRecordId = null;
 
 export function renderDetail(planId) {
   const view = clearView();
@@ -79,7 +82,11 @@ export function renderDetail(planId) {
     );
   } else {
     const ul = el("ul", { class: "record-list" });
-    for (const r of records) ul.appendChild(renderRecordItem(r));
+    for (const r of records) {
+      ul.appendChild(
+        r.id === editingRecordId ? renderRecordEditRow(r) : renderRecordItem(r)
+      );
+    }
     view.appendChild(ul);
   }
 
@@ -145,12 +152,22 @@ export function renderRecordItem(rec) {
   }
 
   const actions = el("div", { class: "record-actions" });
+  const editBtn = el("button", {
+    type: "button",
+    class: "btn-small",
+    text: "Edit",
+  });
+  editBtn.addEventListener("click", () => {
+    editingRecordId = rec.id;
+    renderDetail(rec.type);
+  });
   const delBtn = el("button", {
     type: "button",
     class: "btn-small danger",
     text: "Delete",
   });
   delBtn.addEventListener("click", () => handleDeleteRecord(rec));
+  actions.appendChild(editBtn);
   actions.appendChild(delBtn);
   li.appendChild(actions);
   return li;
@@ -180,6 +197,137 @@ function handleDeleteRecord(rec) {
     }
   }
   deleteRecord(rec.id, { deleteEmptyIntervention });
+}
+
+function renderRecordEditRow(rec) {
+  const li = el("li", { class: "record-item record-edit" });
+  const form = el("form", { class: "stack-form", attrs: { novalidate: "" } });
+  const errMount = el("div");
+  form.appendChild(errMount);
+
+  form.appendChild(
+    labelledInput("Date (YYYY-MM-DD)", "date", {
+      type: "date",
+      value: rec.date || "",
+    })
+  );
+  form.appendChild(
+    checkbox("Date is approximate", "dateApproximate", !!rec.dateApproximate)
+  );
+  form.appendChild(
+    labelledInput("Date text (optional)", "dateText", {
+      value: rec.dateText || "",
+      placeholder: "e.g. May 2024 approximate",
+    })
+  );
+  form.appendChild(
+    labelledInput("km", "km", {
+      type: "number",
+      min: 0,
+      step: 1,
+      value: rec.km ?? "",
+    })
+  );
+  form.appendChild(labelledInput("Brand", "brand", { value: rec.brand || "" }));
+  form.appendChild(
+    labelledInput("Reference", "reference", { value: rec.reference || "" })
+  );
+  form.appendChild(
+    labelledInput("Cost", "cost", {
+      type: "number",
+      min: 0,
+      step: "0.01",
+      value: rec.cost ?? "",
+    })
+  );
+  form.appendChild(
+    labelledInput("Currency", "currency", { value: rec.currency || "EUR" })
+  );
+  form.appendChild(
+    labelledInput("Workshop", "workshop", { value: rec.workshop || "" })
+  );
+  form.appendChild(
+    labelledInput("Quantity", "quantity", {
+      type: "number",
+      min: 1,
+      step: 1,
+      value: rec.quantity ?? 1,
+    })
+  );
+  form.appendChild(
+    labelledInput("Notes", "notes", {
+      tag: "textarea",
+      value: rec.notes || "",
+      attrs: { rows: 3 },
+    })
+  );
+
+  if (rec.interventionId) {
+    form.appendChild(
+      el("p", {
+        class: "muted small",
+        text: "This record is part of an intervention. Editing here changes the record only, not the intervention's grouping or total cost.",
+      })
+    );
+  }
+
+  const actions = el("div", { class: "form-actions" });
+  actions.appendChild(
+    el("button", { type: "submit", class: "btn primary", text: "Save changes" })
+  );
+  const cancel = el("button", { type: "button", class: "btn-small", text: "Cancel" });
+  cancel.addEventListener("click", () => {
+    editingRecordId = null;
+    renderDetail(rec.type);
+  });
+  actions.appendChild(cancel);
+  form.appendChild(actions);
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    errMount.replaceChildren();
+    const fd = new FormData(form);
+    const date = trimOrNull(fd.get("date"));
+    const dateText = trimOrEmpty(fd.get("dateText"));
+    const dateApproximate = fd.get("dateApproximate") === "on";
+    const km = parseNum(fd.get("km"));
+    const cost = parseNum(fd.get("cost"));
+    const quantity = parseNum(fd.get("quantity")) ?? 1;
+
+    const errors = [];
+    if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      errors.push("Date must be YYYY-MM-DD or empty.");
+    }
+    if (!date && km == null && !dateText) {
+      errors.push("At least one of date, km or date text is required.");
+    }
+    if (km != null && km < 0) errors.push("km cannot be negative.");
+    if (cost != null && cost < 0) errors.push("Cost cannot be negative.");
+    if (quantity != null && quantity < 1) errors.push("Quantity must be at least 1.");
+    if (errors.length) {
+      const box = errorBox(errors);
+      if (box) errMount.appendChild(box);
+      return;
+    }
+
+    editingRecordId = null;
+    updateRecord(rec.id, {
+      date,
+      dateApproximate,
+      dateText,
+      km,
+      brand: trimOrEmpty(fd.get("brand")),
+      reference: trimOrEmpty(fd.get("reference")),
+      cost,
+      currency: trimOrEmpty(fd.get("currency")) || "EUR",
+      workshop: trimOrEmpty(fd.get("workshop")),
+      quantity,
+      notes: trimOrEmpty(fd.get("notes")),
+    });
+  });
+
+  li.appendChild(form);
+  return li;
 }
 
 function renderAddRecordForm(planItem) {
