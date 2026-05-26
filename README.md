@@ -77,7 +77,7 @@ work.
 ```
 
 > The values above (100 000 km, June 2024, "Demo Workshop") come from the
-> anonymized seed in `data/mantenimientos.json`. Once you configure a
+> anonymized seed in `docs/data/mantenimientos.json`. Once you configure a
 > private data repo and click **Load from GitHub**, the UI shows your real
 > values without ever committing them to this codebase.
 
@@ -153,25 +153,32 @@ clear error and **do not replace** local state.
 
 ```
 .
-├── index.html                  single-page shell
-├── styles.css                  CSS variables + components, mobile-first
-├── app.js                      boot, hash router, view dispatch
-├── state.js                    state, localStorage, mutators, sync state machine
-├── validation.js               data/plan validators, strict ISO date check
-├── calculations.js             maintenance engine (next due, urgency, cost summary)
-├── dom.js                      safe DOM helpers (el/row/labelledInput/etc.)
-├── views-dashboard.js          dashboard view
-├── views-detail.js             detail view + Register-new-record form
-├── views-history.js            history view, filters, cost summary
-├── views-settings.js           settings, plan editor, GitHub sync, import/export, reset
-├── github-api.js               GitHub Contents API adapter (no domain logic)
+├── docs/                       ← GitHub Pages publishing source (Settings → Pages → /docs)
+│   ├── .nojekyll               serve files as-is (no Jekyll processing)
+│   ├── index.html              single-page shell
+│   ├── assets/
+│   │   └── css/styles.css      CSS variables + components, mobile-first
+│   ├── js/
+│   │   ├── app.js              boot, hash router, view dispatch
+│   │   ├── core/
+│   │   │   ├── state.js        state, localStorage, mutators, sync state machine
+│   │   │   ├── validation.js   data/plan validators, strict ISO date check
+│   │   │   └── calculations.js maintenance engine (next due, urgency, cost summary)
+│   │   ├── ui/
+│   │   │   ├── dom.js           safe DOM helpers (el/row/labelledInput/etc.)
+│   │   │   ├── views-dashboard.js   dashboard view
+│   │   │   ├── views-detail.js      detail view + Register-new-record form
+│   │   │   ├── views-history.js     history view, filters, cost summary
+│   │   │   └── views-settings.js    settings, plan editor, GitHub sync, import/export
+│   │   └── api/
+│   │       └── github-api.js    GitHub Contents API adapter (no domain logic)
+│   └── data/
+│       ├── mantenimientos.json     seed: car + currentMileage + interventions + records
+│       └── plan-mantenimiento.json seed: maintenance plan items
 │
-├── data/
-│   ├── mantenimientos.json     seed: car + currentMileage + interventions + records
-│   └── plan-mantenimiento.json seed: maintenance plan items
-│
-├── docker-compose.yml          dev only — serves the static site
-├── Dockerfile                  dev only — Node + http-server
+├── docker/Dockerfile           dev only — Node + http-server
+├── docker-compose.yml          dev only — serves docs/ as the static site
+├── scripts/check.mjs           dev only — JS syntax + JSON parse gate (auto-discovers files)
 ├── package.json                dev only — check + serve scripts
 ├── .dockerignore               dev only
 ├── README.md                   you are here
@@ -179,8 +186,10 @@ clear error and **do not replace** local state.
 └── .claude/skills/car-maintenance-app/SKILL.md   project context for Claude
 ```
 
-Everything outside `data/`, `*.html`, `*.css`, and `*.js` is dev tooling
-and **never deployed**.
+Everything the site needs lives under **`docs/`** — that folder is the
+GitHub Pages publishing root, so it is served at the site URL's root
+(e.g. `docs/js/app.js` → `https://<you>.github.io/car-maintenance/js/app.js`).
+Everything outside `docs/` is dev tooling and **never deployed**.
 
 ---
 
@@ -190,19 +199,20 @@ Docker Compose is the recommended workflow. You need only Docker installed
 on the host — no Node, no npm, no `node_modules`.
 
 ```bash
-# Build (first time only) and serve at http://localhost:8000
+# Build (first time only) and serve docs/ at http://localhost:8000
 docker compose up
 
-# Quality checks: JS syntax + JSON parse
+# Quality checks: JS syntax + JSON parse (runs scripts/check.mjs)
 docker compose run --rm app npm run check
 
 # Ad-hoc shell inside the dev container
 docker compose run --rm app sh
 ```
 
-The container mounts `./` into `/app`, so edits on the host are picked up
-by the next page refresh. The deployed GitHub Pages site never sees the
-container or `package.json`.
+The container mounts `./` into `/app` and serves the **`docs/`** folder, so
+the local URL maps the same way GitHub Pages will (the site root is
+`docs/`). Edits on the host are picked up by the next page refresh. The
+deployed GitHub Pages site never sees the container or `package.json`.
 
 ### Fallback: anything that serves static files
 
@@ -212,7 +222,7 @@ load over HTTP, not `file://`, because it uses `fetch()` to load the JSON
 seeds.
 
 ```bash
-python3 -m http.server 8000
+python3 -m http.server 8000 --directory docs
 # open http://localhost:8000
 ```
 
@@ -315,14 +325,14 @@ That is what the warning at the top of this README is about.
 **A. Create or fork the app repo.**
 Push this codebase (or a fork) to a new repo, e.g.
 `github.com/<you>/car-maintenance`. Keep it public. **Before pushing**:
-confirm `data/mantenimientos.json` and `data/plan-mantenimiento.json`
+confirm `docs/data/mantenimientos.json` and `docs/data/plan-mantenimiento.json`
 contain only the demo content (no VIN, no plate, no real workshop, no
 real costs). See the [Release checklist](#release-checklist) for the
 exact grep commands.
 
 **B. Enable GitHub Pages.**
 Settings → Pages → Source: `Deploy from a branch` → Branch: `main` /
-`(root)`. After Pages publishes, visit `https://<you>.github.io/car-maintenance/`.
+`/docs`. After Pages publishes, visit `https://<you>.github.io/car-maintenance/`.
 
 **C. Create a private data repo.**
 Create `github.com/<you>/car-data` (or any name) as **private**. Leave it
@@ -570,22 +580,23 @@ Before publishing a new version of the app, run through this list:
       should return nothing (or only the demo placeholders):
 
       ```bash
-      grep -rn 'github_pat_' .                     # no PAT in repo
-      grep -rn 'WVWZZZ' data/                      # no real VIN prefix
-      grep -rn -iE '"vin": "[A-Z0-9]{10,}"' data/  # no real VIN string
-      grep -rn -iE '"licensePlate": "[A-Z0-9]+"' data/  # no real plate
-      grep -rn -E '"workshop": "(?!Demo Workshop")' data/  # no real workshop
-      grep -rn -E '"totalCost": [0-9]+' data/      # no real costs
-      grep -rn -E '"km": [0-9]+' data/             # all km values are round demo numbers
+      grep -rn 'github_pat_' .                          # no PAT in repo
+      grep -rn 'WVWZZZ' docs/data/                       # no real VIN prefix
+      grep -rn -iE '"vin": "[A-Z0-9]{10,}"' docs/data/   # no real VIN string
+      grep -rn -iE '"licensePlate": "[A-Z0-9]+"' docs/data/  # no real plate
+      grep -rn -E '"workshop": "(?!Demo Workshop")' docs/data/  # no real workshop
+      grep -rn -E '"totalCost": [0-9]+' docs/data/       # no real costs
+      grep -rn -E '"km": [0-9]+' docs/data/              # all km values are round demo numbers
       ```
 
-      The only matches in `data/` should be demo values (empty VIN/plate,
+      The only matches in `docs/data/` should be demo values (empty VIN/plate,
       "Demo Workshop", `totalCost: null`, round km).
 
 - [ ] App repo is **public** but contains only demo seed.
 - [ ] Data repo is **private** (or you have explicitly accepted the
       public tradeoff in a single-repo setup).
-- [ ] App repo's GitHub Pages is enabled and serving the latest commit.
+- [ ] App repo's GitHub Pages is enabled (Branch `main`, folder `/docs`) and
+      serving the latest commit.
 
 ---
 

@@ -1,13 +1,13 @@
 // Dashboard view: car summary + urgency-sorted maintenance cards.
 
-import { state } from "./state.js";
+import { state } from "../core/state.js";
 import {
   computePlanRows,
   formatKm,
   formatLocalISO,
   formatRecordDate,
   sortRows,
-} from "./calculations.js";
+} from "../core/calculations.js";
 import { clearView, el, row } from "./dom.js";
 
 export function renderDashboard() {

@@ -1,11 +1,11 @@
 // Global history view: chronological list with filters + cost summary.
 
-import { state } from "./state.js";
+import { state } from "../core/state.js";
 import {
   computeCostSummary,
   formatKm,
   formatRecordDate,
-} from "./calculations.js";
+} from "../core/calculations.js";
 import { clearView, el, labelledInput, labelledSelect } from "./dom.js";
 
 // Module-level filter state, kept across re-renders within a session.

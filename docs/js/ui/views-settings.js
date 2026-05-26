@@ -26,7 +26,7 @@ import {
   updateCar,
   updateMileage,
   updatePlanItem,
-} from "./state.js";
+} from "../core/state.js";
 import {
   checkbox,
   clearView,
@@ -39,7 +39,7 @@ import {
   pickFile,
   readFileAsText,
 } from "./dom.js";
-import { crossValidate } from "./validation.js";
+import { crossValidate } from "../core/validation.js";
 
 export function renderSettings() {
   const view = clearView();

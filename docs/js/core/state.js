@@ -8,7 +8,7 @@ import {
   loadJsonFile,
   saveJsonFile,
   testConnection,
-} from "./github-api.js";
+} from "../api/github-api.js";
 
 const KEYS = {
   data: "car-maint:data",

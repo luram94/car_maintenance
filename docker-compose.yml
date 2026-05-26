@@ -8,7 +8,9 @@
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
     image: car-maintenance-dev:latest
     container_name: car-maintenance-dev
     ports:

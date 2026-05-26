@@ -11,12 +11,12 @@ import {
   setChangeHook,
   state,
   toggleTheme,
-} from "./state.js";
-import { renderDashboard } from "./views-dashboard.js";
-import { renderDetail } from "./views-detail.js";
-import { renderHistory } from "./views-history.js";
-import { renderSettings } from "./views-settings.js";
-import { clearView, el } from "./dom.js";
+} from "./core/state.js";
+import { renderDashboard } from "./ui/views-dashboard.js";
+import { renderDetail } from "./ui/views-detail.js";
+import { renderHistory } from "./ui/views-history.js";
+import { renderSettings } from "./ui/views-settings.js";
+import { clearView, el } from "./ui/dom.js";
 
 const DATA_PATH = "./data/mantenimientos.json";
 const PLAN_PATH = "./data/plan-mantenimiento.json";

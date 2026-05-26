@@ -7,12 +7,12 @@ import {
   newId,
   state,
   updateRecord,
-} from "./state.js";
+} from "../core/state.js";
 import {
   computePlanRows,
   formatKm,
   formatRecordDate,
-} from "./calculations.js";
+} from "../core/calculations.js";
 import {
   checkbox,
   clearView,
