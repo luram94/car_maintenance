@@ -85,6 +85,8 @@ The original conversation established these patterns using the owner's real reco
 
 Dashboard order: most urgent → unknown history → normal scheduled → repair/unscheduled.
 
+> **External consumer of `calculations.js` (added 2026-05-26).** The owner's private data repo runs a scheduled GitHub Action that **fetches `calculations.js` from this repo's `main` at runtime** and calls `computePlanRows` + `sortRows` (filtering `urgency === "red" | "yellow"`) to send a weekly Telegram maintenance reminder. So `calculations.js` is no longer consumed only by the browser app: changing the signatures or the returned fields (`urgency`, `remainingKm`, `remainingMonths`, `item.name`) or the urgency thresholds will silently change/break that live reminder, and **no CI in this repo catches it**. Treat the calc engine's public surface as a contract.
+
 ## GitHub API rules (Phase 4 territory)
 
 `github-api.js` must contain **zero** car-maintenance logic — it is a generic Contents API adapter.
