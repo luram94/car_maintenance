@@ -188,7 +188,7 @@ clear error and **do not replace** local state.
 
 Everything the site needs lives under **`docs/`** — that folder is the
 GitHub Pages publishing root, so it is served at the site URL's root
-(e.g. `docs/js/app.js` → `https://<you>.github.io/car-maintenance/js/app.js`).
+(e.g. `docs/js/app.js` → `https://<you>.github.io/car_maintenance/js/app.js`).
 Everything outside `docs/` is dev tooling and **never deployed**.
 
 ---
@@ -332,7 +332,7 @@ exact grep commands.
 
 **B. Enable GitHub Pages.**
 Settings → Pages → Source: `Deploy from a branch` → Branch: `main` /
-`/docs`. After Pages publishes, visit `https://<you>.github.io/car-maintenance/`.
+`/docs`. After Pages publishes, visit `https://<you>.github.io/car_maintenance/`.
 
 **C. Create a private data repo.**
 Create `github.com/<you>/car-data` (or any name) as **private**. Leave it
@@ -354,7 +354,7 @@ cost history will live — never the public app repo.
   `github_pat_…`). **You will not see it again** — paste it into the app
   next.
 
-**E. Open the deployed app** at `https://<you>.github.io/car-maintenance/`.
+**E. Open the deployed app** at `https://<you>.github.io/car_maintenance/`.
 
 **F. Settings → GitHub sync** — fill in:
 - Owner: `<you>`
